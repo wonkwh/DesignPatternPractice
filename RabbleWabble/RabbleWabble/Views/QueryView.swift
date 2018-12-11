@@ -46,7 +46,7 @@ extension UIView {
     }
 }
 
-class QuestionView: UIView {
+class QueryView: UIView {
     let promptLabel: UILabel = {
         let label = UILabel()
         label.text = "Prompt"
@@ -120,7 +120,7 @@ class QuestionView: UIView {
         addSubview(incorrectCountLabel)
         
         //MARK: - constraint
-        promptLabel.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 60)
+        promptLabel.anchor(top: topAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 80)
         hintLabel.anchor(top: promptLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8)
         answerLabel.anchor(top: hintLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 50)
         
