@@ -38,7 +38,7 @@ extension SelectQueryGroupController {
 extension SelectQueryGroupController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let queryController = QueryController()
-        queryController.queryGroup = selectedQueryGroup
+        queryController.queryStrategy = RandomQueryStrategy(queryGroup: selectedQueryGroup)
         queryController.delegate = self
         navigationController?.pushViewController(queryController, animated: true)
     }
@@ -51,11 +51,11 @@ extension SelectQueryGroupController {
 
 // MARK: - QueryControllerDelegate
 extension SelectQueryGroupController: QueryControllerDelegate {
-    func queryController(_ viewController: QueryController, didCancel queryGroup: QueryGroup, at queryIndex: Int) {
+    func queryController(_ viewController: QueryController, didCancel queryStrategy: QueryStrategy, at queryIndex: Int) {
         navigationController?.popToViewController(self, animated: true)
     }
     
-    func queryController(_ viewController: QueryController, didComplete queryGroup: QueryGroup, at queryIndex: Int) {
+    func queryController(_ viewController: QueryController, didComplete queryStrategy: QueryStrategy, at queryIndex: Int) {
         navigationController?.popToViewController(self, animated: true)
     }
 }

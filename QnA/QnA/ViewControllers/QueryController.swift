@@ -17,13 +17,13 @@ extension UIView {
 // MARK: - queryControllerDelegate
 
 protocol QueryControllerDelegate: class {
-    func queryController(_ viewController: QueryController, didCancel queryGroup: QueryGroup, at queryIndex: Int)
-    func queryController(_ viewController: QueryController, didComplete queryGroup: QueryGroup, at queryIndex: Int)
+    func queryController(_ viewController: QueryController, didCancel queryStrategy: QueryStrategy, at queryIndex: Int)
+    func queryController(_ viewController: QueryController, didComplete queryStrategy: QueryStrategy, at queryIndex: Int)
 }
 
 class QueryController: UIViewController {
 
-    var queryGroup = QueryGroup.basicPhrases()
+    //var queryGroup = QueryGroup.basicPhrases()
     var queryIndex  = 0
     var correctCount = 0
     var incorrectCount = 0
@@ -39,6 +39,12 @@ class QueryController: UIViewController {
         return item
     }()
     
+    var queryStrategy: QueryStrategy! {
+        didSet {
+            navigationItem.title = queryStrategy.title
+        }
+    }
+    
     override func loadView() {
         view = queryView
     }
@@ -46,14 +52,13 @@ class QueryController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = queryGroup.title
         let tap = UITapGestureRecognizer(target: self, action: #selector(toggleAnswerLabel))
         queryView.addGestureRecognizer(tap)
         
         queryView.correctButton.addTarget(self, action: #selector(handleCorrect), for: .touchUpInside)
         queryView.incorrectButton.addTarget(self, action: #selector(handleIncorrect), for: .touchUpInside)
         setupCancelButton()
-        showquery()
+        showQuery()
     }
 
     func setupCancelButton() {
@@ -61,8 +66,9 @@ class QueryController: UIViewController {
                                                            style: .plain, target: self,
                                                            action: #selector(handleCancelPressed))
     }
-    func showquery() {
-        let query = queryGroup.querys[queryIndex]
+    func showQuery() {
+        let query = queryStrategy.currentQuery()
+        debugPrint(query)
         
         queryView.answerLabel.text = query.answer
         queryView.promptLabel.text = query.prompt
@@ -71,7 +77,7 @@ class QueryController: UIViewController {
         queryView.answerLabel.isHidden = true
         queryView.hintLabel.isHidden = true
         
-        queryIndexItem.title = "\(queryIndex + 1)/\(queryGroup.querys.count)"
+        queryIndexItem.title = queryStrategy.queryIndexTitle()
     }
     
     @objc func toggleAnswerLabel(_ sender: Any) {
@@ -80,30 +86,30 @@ class QueryController: UIViewController {
     }
     
     @objc func handleCorrect(_ sender: Any) {
-        correctCount += 1
+        let query = queryStrategy.currentQuery()
+        queryStrategy.markQueryCorrect(query)
         queryView.correctCountLabel.text = "\(correctCount)"
-        showNextquery()
+        showNextQuery()
     }
     
     @objc func handleIncorrect(_ sender: Any) {
-        incorrectCount += 1
+        let query = queryStrategy.currentQuery()
+        queryStrategy.markQueryInCorrect(query)
         queryView.incorrectCountLabel.text = "\(incorrectCount)"
-        showNextquery()
+        showNextQuery()
     }
     
     @objc func handleCancelPressed(sender: UIBarButtonItem) {
-        delegate?.queryController(self, didCancel: queryGroup, at: queryIndex)
+        delegate?.queryController(self, didCancel: queryStrategy, at: queryIndex)
     }
     
-    func showNextquery() {
-        queryIndex += 1
-        
-        guard queryIndex < queryGroup.querys.count else {
-            delegate?.queryController(self, didComplete: queryGroup, at: queryIndex)
+    func showNextQuery() {
+        guard queryStrategy.nextQuery() else {
+            delegate?.queryController(self, didComplete: queryStrategy, at: queryIndex)
             return
         }
         
-        showquery()
+        showQuery()
     }
 }
 

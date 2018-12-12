@@ -82,7 +82,7 @@ extension QueryGroup {
       Query(answer: "wo", hint: nil, prompt: "우"),
       Query(answer: "n", hint: nil, prompt: "엔")
     ]
-    return QueryGroup(querys: querys, title: "Hiragana")
+    return QueryGroup(queries: querys, title: "Hiragana")
   }
 
   public static func katakana() -> QueryGroup {
@@ -134,7 +134,7 @@ extension QueryGroup {
       Query(answer: "wo", hint: nil, prompt: "ヲ"),
       Query(answer: "n", hint: nil, prompt: "ン")
     ]
-    return QueryGroup(querys: querys, title: "Katakana")
+    return QueryGroup(queries: querys, title: "Katakana")
   }
 
   public static func basicPhrases() -> QueryGroup {
@@ -147,7 +147,7 @@ extension QueryGroup {
       Query(answer: "~ is.", hint: "~ Desu", prompt: "〜です"),
       Query(answer: "Please give me ~.", hint: "~　wo kudasai", prompt: "〜をください")
     ]
-    return QueryGroup(querys: querys, title: "Basic Phrases")
+    return QueryGroup(queries: querys, title: "Basic Phrases")
   }
 
   public static func numbers() -> QueryGroup {
@@ -163,6 +163,6 @@ extension QueryGroup {
       Query(answer: "nine", hint: "kyu", prompt: "九"),
       Query(answer: "ten", hint: "jyuu", prompt: "十"),
     ]
-    return QueryGroup(querys: querys, title: "Numbers")
+    return QueryGroup(queries: querys, title: "Numbers")
   }
 }

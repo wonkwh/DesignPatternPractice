@@ -9,7 +9,7 @@
 import Foundation
 
 struct QueryGroup {
-    let querys: [Query]
+    let queries: [Query]
     let title: String
 }
 
