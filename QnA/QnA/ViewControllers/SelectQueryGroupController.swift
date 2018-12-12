@@ -1,6 +1,6 @@
 //
 //  QueryGroupController.swift
-//  RabbleWabble
+//  QnA
 //
 //  Created by wonkwh on 11/12/2018.
 //  Copyright © 2018 wonkwh. All rights reserved.
