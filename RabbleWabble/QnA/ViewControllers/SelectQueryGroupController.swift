@@ -10,8 +10,8 @@ import UIKit
 
 class SelectQueryGroupController: UITableViewController {
 
-    let queryGrpoups = QuestionGroup.allGroups()
-    fileprivate var selectedQuestionGroup: QuestionGroup!
+    let queryGrpoups = QueryGroup.allGroups()
+    fileprivate var selectedQueryGroup: QueryGroup!
     
     override func viewDidLoad() {
         navigationItem.title = "Select Query Group"
@@ -38,24 +38,24 @@ extension SelectQueryGroupController {
 extension SelectQueryGroupController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let queryController = QueryController()
-        queryController.questionGroup = selectedQuestionGroup
+        queryController.queryGroup = selectedQueryGroup
         queryController.delegate = self
         navigationController?.pushViewController(queryController, animated: true)
     }
     
     override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-        selectedQuestionGroup = queryGrpoups[indexPath.row]
+        selectedQueryGroup = queryGrpoups[indexPath.row]
         return indexPath
     }
 }
 
 // MARK: - QueryControllerDelegate
 extension SelectQueryGroupController: QueryControllerDelegate {
-    func queryController(_ viewController: QueryController, didCancel questionGroup: QuestionGroup, at questionIndex: Int) {
+    func queryController(_ viewController: QueryController, didCancel queryGroup: QueryGroup, at queryIndex: Int) {
         navigationController?.popToViewController(self, animated: true)
     }
     
-    func queryController(_ viewController: QueryController, didComplete questionGroup: QuestionGroup, at questionIndex: Int) {
+    func queryController(_ viewController: QueryController, didComplete queryGroup: QueryGroup, at queryIndex: Int) {
         navigationController?.popToViewController(self, animated: true)
     }
 }

@@ -1,5 +1,5 @@
 //
-//  QuestionGroup.swift
+//  Question.swift
 //  RabbleWabble
 //
 //  Created by wonkwh on 03/12/2018.
@@ -8,9 +8,10 @@
 
 import Foundation
 
-struct QuestionGroup {
-    let questions: [Question]
-    let title: String
+struct Query {
+    let answer: String
+    let hint: String?
+    let prompt: String
 }
 
 

@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:RabbleWabble.xcodeproj">
+      location = "self:/Users/wonkwh/repository/DesignPatternPractice/RabbleWabble/QnA.xcodeproj">
    </FileRef>
 </Workspace>

@@ -14,12 +14,6 @@ extension UIView {
     }
 }
 
-// MARK: - queryControllerDelegate
-
-protocol QueryControllerDelegate: class {
-    func queryController(_ viewController: QueryController, didCancel questionGroup: QuestionGroup, at questionIndex: Int)
-    func queryController(_ viewController: QueryController, didComplete questionGroup: QuestionGroup, at questionIndex: Int)
-}
 
 class QueryController: UIViewController {
 
@@ -30,37 +24,20 @@ class QueryController: UIViewController {
     
     let questionView = QueryView()
     
-    weak var delegate: QueryControllerDelegate?
-    
-    private lazy var queryIndexItem : UIBarButtonItem = {
-        let item = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        item.tintColor = .black
-        navigationItem.rightBarButtonItem = item
-        return item
-    }()
-    
     override func loadView() {
         view = questionView
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        navigationItem.title = questionGroup.title
         let tap = UITapGestureRecognizer(target: self, action: #selector(toggleAnswerLabel))
         questionView.addGestureRecognizer(tap)
         
         questionView.correctButton.addTarget(self, action: #selector(handleCorrect), for: .touchUpInside)
         questionView.incorrectButton.addTarget(self, action: #selector(handleIncorrect), for: .touchUpInside)
-        setupCancelButton()
         showQuestion()
     }
 
-    func setupCancelButton() {
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_menu"), landscapeImagePhone: nil,
-                                                           style: .plain, target: self,
-                                                           action: #selector(handleCancelPressed))
-    }
     func showQuestion() {
         let question = questionGroup.questions[questionIndex]
         
@@ -70,8 +47,6 @@ class QueryController: UIViewController {
         
         questionView.answerLabel.isHidden = true
         questionView.hintLabel.isHidden = true
-        
-        queryIndexItem.title = "\(questionIndex + 1)/\(questionGroup.questions.count)"
     }
     
     @objc func toggleAnswerLabel(_ sender: Any) {
@@ -91,15 +66,10 @@ class QueryController: UIViewController {
         showNextQuestion()
     }
     
-    @objc func handleCancelPressed(sender: UIBarButtonItem) {
-        delegate?.queryController(self, didCancel: questionGroup, at: questionIndex)
-    }
-    
     func showNextQuestion() {
         questionIndex += 1
         
         guard questionIndex < questionGroup.questions.count else {
-            delegate?.queryController(self, didComplete: questionGroup, at: questionIndex)
             return
         }
         
