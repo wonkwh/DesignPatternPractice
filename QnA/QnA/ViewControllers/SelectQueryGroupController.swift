@@ -15,9 +15,14 @@ class SelectQueryGroupController: UITableViewController {
     
     override func viewDidLoad() {
         navigationItem.title = "Select Query Group"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "ic_settings"), style: .plain, target: self, action: #selector(handleAppSetting))
         
         tableView.tableFooterView = UIView()
         tableView.register(QueryGroupCell.self, forCellReuseIdentifier: "QueryGroupCell")
+    }
+    
+    @objc fileprivate func handleAppSetting() {
+        navigationController?.pushViewController(AppSettingController(), animated: true)
     }
 }
 
@@ -38,7 +43,7 @@ extension SelectQueryGroupController {
 extension SelectQueryGroupController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let queryController = QueryController()
-        queryController.queryStrategy = RandomQueryStrategy(queryGroup: selectedQueryGroup)
+        queryController.queryStrategy = AppSettings.shared.queryStrategy(for: selectedQueryGroup)
         queryController.delegate = self
         navigationController?.pushViewController(queryController, animated: true)
     }
