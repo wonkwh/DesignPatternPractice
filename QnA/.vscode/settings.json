@@ -1,0 +1,16 @@
+// .vscode/settings.json example for iOS and WatchOS
+{
+    "swift.targets": [
+      {
+        "name": "QnA",
+        "path": "QnA/QnA",
+        "sources": ["**/*.swift"],
+        "compilerArguments": [
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk",
+          "-target",
+          "arm64-apple-ios11.0"
+        ]
+      }
+    ]
+  }
