@@ -1,15 +1,15 @@
-/// Copyright (c) 2018 Razeware LLC
-///
+/// Copyright (c) 2019 Razeware LLC
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,12 +26,15 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import UIKit
 import MapKit
 
-public class MapPin: NSObject {
+public class MapViewModel: NSObject {
   
   // MARK: - Properties
+  public let image: UIImage
+  public let ratingDescription: String
+  
   public let coordinate: CLLocationCoordinate2D
   public let name: String
   public let rating: Double
@@ -39,17 +42,25 @@ public class MapPin: NSObject {
   // MARK: - Object Lifecycle
   public init(coordinate: CLLocationCoordinate2D,
               name: String,
-              rating: Double) {
+              rating: Double,
+              image: UIImage) {
     self.coordinate = coordinate
     self.name = name
     self.rating = rating
+    self.image = image
+    self.ratingDescription = "\(rating) stars"
   }
 }
 
 // MARK: - MKAnnotation
-extension MapPin: MKAnnotation {
+extension MapViewModel: MKAnnotation {
   
   public var title: String? {
     return name
   }
+  
+  public var subtitle: String? {
+    return ratingDescription
+  }
 }
+

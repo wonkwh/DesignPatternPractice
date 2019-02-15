@@ -110,10 +110,41 @@ extension ViewController: MKMapViewDelegate {
                                               longitude: yelpCoordinate.longitude)
       let name = business.name
       let rating = business.rating
-      let annotation = MapPin(coordinate: coordinate,
-                              name: name,
-                              rating: rating)
+      let image:UIImage
+      
+      switch rating {
+      case 0.0..<3.5:
+        image = #imageLiteral(resourceName: "bad")
+      case 3.5..<4.0:
+        image = #imageLiteral(resourceName: "meh")
+      case 4.0..<4.75:
+        image = #imageLiteral(resourceName: "good")
+      case 4.75..<5.0:
+        image = #imageLiteral(resourceName: "great")
+      default:
+        image = #imageLiteral(resourceName: "bad")
+      }
+      
+      let annotation = MapViewModel(coordinate: coordinate, name: name, rating: rating, image: image)
       mapView.addAnnotation(annotation)
     }
+  }
+
+  public func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+    guard let viewModel = annotation as? MapViewModel else {
+      return nil
+    }
+    
+    let identifier = "business"
+    let annotationView: MKAnnotationView
+    if let existingView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) {
+      annotationView = existingView
+    } else {
+      annotationView = MKAnnotationView(annotation: viewModel,
+                                        reuseIdentifier: identifier)
+    }
+    annotationView.image = viewModel.image
+    annotationView.canShowCallout = true
+    return annotationView
   }
 }
