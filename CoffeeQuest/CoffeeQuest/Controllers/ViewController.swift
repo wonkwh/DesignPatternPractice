@@ -36,6 +36,7 @@ public class ViewController: UIViewController {
   private let client = YLPClient(apiKey: YelpAPIKey)
   private let locationManager = CLLocationManager()
   let annotationFactory = AnnotationFactory()
+  var filter: Filter!
   
   // MARK: - Outlets
   @IBOutlet public var mapView: MKMapView! {
@@ -53,7 +54,16 @@ public class ViewController: UIViewController {
   
   // MARK: - Actions
   @IBAction func businessFilterToggleChanged(_ sender: UISwitch) {
+    if sender.isOn {
+      filter = Filter.starRating(atLeast: 4.75)
+    } else {
+      filter = Filter.starRating(atLeast: 0.0)
+    }
     
+    for business in businesses {
+      filter.businesses.append(business)
+    }
+    addAnnotations()
   }
 }
 
@@ -83,25 +93,29 @@ extension ViewController: MKMapViewDelegate {
     let yelpCoordinate = YLPCoordinate(latitude: coordinate.latitude,
                                        longitude: coordinate.longitude)
     
-    client.search(with: yelpCoordinate,
-                  term: "coffee",
-                  limit: 35,
-                  offset: 0,
-                  sort: .bestMatched) { [weak self] (searchResult, error) in
-                    guard let self = self else { return }
-                    guard let searchResult = searchResult?.adaptSearchResultsFromYelP(), error == nil else {
-                        print("Search failed: \(String(describing: error))")
-                        return
-                    }
-                    self.businesses = searchResult.businesses
-                    DispatchQueue.main.async {
-                      self.addAnnotations()
-                    }
+    client.search(with: yelpCoordinate, term: "coffee", limit: 35, offset: 0, sort: .bestMatched) { [weak self] (searchResult, error) in
+      guard let self = self else { return }
+      guard let searchResult = searchResult?.adaptSearchResultsFromYelP(), error == nil else {
+          print("Search failed: \(String(describing: error))")
+          return
+      }
+      self.businesses = searchResult.businesses
+      self.filter = Filter.identity()
+      for business in self.businesses {
+        self.filter.businesses.append(business)
+      }
+      
+      DispatchQueue.main.async {
+        self.addAnnotations()
+      }
     }
   }
   
   private func addAnnotations() {
-    for business in businesses {
+    mapView.removeAnnotations(mapView.annotations)
+    filter.businesses = filter.filterBusinesses()
+    
+    for business in filter.businesses {
       guard let viewModel = annotationFactory.createBusinessMapViewModel(for: business) else {
         continue
       }
